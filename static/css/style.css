@@ -6,5 +6,8 @@ background: linear-gradient(to right, #000000, #EB5757); /* W3C, IE 10+/ Edge, F
 
 }
 .margin-top{
-margin-top:50px;
+margin-top:30px;
+}
+.margin-b{
+margin-top:80px;
 }

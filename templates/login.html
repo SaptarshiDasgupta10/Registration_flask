@@ -11,7 +11,7 @@
 </head>
 
 
-<body class="bg-info">
+<body class="bg_1">
 <nav class="navbar bg_1">
     <h2 class="navbar-brand text-light">Expense App</h2>
 </nav>
@@ -27,11 +27,11 @@
                     <h3>Login Form</h3>
                 </div>
                 <div class="card-body">
-                    <form class="form">
+                    <form class="form" method="post" action = "/login_validation" >
                         <label>Email:</label><br>
-                        <input type = 'email' class="form-control"><br>
+                        <input type = 'email' class="form-control" name="email"><br>
                         <label>Password:</label><br>
-                        <input type="password" class = 'form-control'><br>
+                        <input type="password" class = 'form-control' name="password"><br>
                         <input type="submit" class = 'btn btn-lg btn-primary form-control' value="Login">
                     </form>
                     <p>Not a member? <a href = "/register" class="mt-2">create account</a></p>
