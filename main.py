@@ -1,13 +1,18 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,redirect,session
+import os
 import pymysql
 conn = pymysql.connect(host="localhost",user = "root",password="",database = "expense-app1")
 cursor = conn.cursor()
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 @app.route('/')
 def login():
-    return render_template('login.html')
+    if 'user_id' in session:
+        return  redirect('/home')
+    else:
+        return render_template('login.html')
 
 
 @app.route('/register')
@@ -16,7 +21,10 @@ def register():
 
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    if 'user_id' in session:
+        return render_template('home.html')
+    else:
+        return redirect('/')
 
 @app.route('/login_validation',methods = ['POST'])
 def login_validation():
@@ -25,9 +33,10 @@ def login_validation():
     cursor.execute("""SELECT * FROM `user` WHERE `email` LIKE "{}" AND `password` LIKE "{}" """.format(email,password))
     users = cursor.fetchall()
     if(len(users)>0):
-        return render_template('home.html')
+        session['user_id'] = users[0][0]
+        return redirect('/home')
     else:
-        return render_template('login.html')
+        return redirect('/')
 
 @app.route('/add_user',methods = ['POST'])
 def add_user():
@@ -36,7 +45,14 @@ def add_user():
     email = request.form.get('uemail')
     cursor.execute("""INSERT INTO `user` (`user_id`,`name`,`email`,`password`) VALUES(NULL,'{}','{}','{}')""".format(name,email,password))
     conn.commit()
-    return "User Registered Successfully"
+    cursor.execute("""SELECT * FROM `user` WHERE `email` LIKE "{}" """.format(email))
+    myuser = cursor.fetchall()
+    session['user_id'] = myuser[0][0]
+    return redirect('/home')
+@app.route('/logout')
+def logout():
+    session.pop('user_id')
+    return redirect('/')
 
 
 if __name__ == "__main__":
